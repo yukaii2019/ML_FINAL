@@ -98,13 +98,8 @@ class GUI():
             self.real_cursor_position = self.real_cursor_position + 1
         self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
     def change_equation_bar(self,e):
-        width = self.lbl_2.winfo_width()
-        if len(self.now_text)>(width-26)//25:   
-            self.lbl_2["text"] = self.now_text[len(self.now_text)-(width-26)//25:]
-        else:
-            self.lbl_2["text"] = self.now_text
-
-
+        self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
+        self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
     def left(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
         if self.cursor_position != 0:
@@ -129,7 +124,24 @@ class GUI():
             self.real_cursor_position = self.real_cursor_position + 1
             self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
         
-
+    def DEL(self):
+        self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
+        if self.cursor_position != 0:
+            self.cursor = self.cursor[3:]
+            self.cursor_position = self.cursor_position - 1
+            self.real_cursor_position = self.real_cursor_position - 1
+            self.lbl_3["text"] = self.cursor
+            self.real_text = self.real_text[0:self.real_cursor_position] + self.real_text[self.real_cursor_position+1:]
+            self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)]
+            
+    def AC(self):
+        self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
+        self.real_cursor_position = 0
+        self.cursor_position = 0
+        self.real_text = ''
+        self.cursor = ' \N{BLACK DOWN-POINTING TRIANGLE} ' 
+        self.lbl_3["text"] = self.cursor
+        self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
     def main(self, pred):
         self.prediction = pred
         
@@ -207,8 +219,8 @@ class GUI():
 
 
         # left buttons
-        self.btn_5 = tk.Button(master = self.frm_left_btn, text = 'DEL', relief = tk.RIDGE, borderwidth = 1, command = self.button_add)
-        self.btn_6 = tk.Button(master = self.frm_left_btn, text = 'AC' , relief = tk.RIDGE, borderwidth = 1 , command = self.button_add)
+        self.btn_5 = tk.Button(master = self.frm_left_btn, text = 'DEL', relief = tk.RIDGE, borderwidth = 1, command = self.DEL)
+        self.btn_6 = tk.Button(master = self.frm_left_btn, text = 'AC' , relief = tk.RIDGE, borderwidth = 1 , command = self.AC)
         self.btn_7 = tk.Button(master = self.frm_left_btn, text = "\N{RIGHTWARDS BLACK ARROW}", relief = tk.RIDGE, borderwidth = 1, command = self.right)
         self.btn_8 = tk.Button(master = self.frm_left_btn, text = "\N{LEFTWARDS BLACK ARROW}" , relief = tk.RIDGE, borderwidth = 1, command = self.left)
         self.btn_9 = tk.Button(master = self.frm_left_btn, text = '=', command = self.save, relief = tk.RIDGE, borderwidth = 1)
