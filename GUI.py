@@ -36,11 +36,13 @@ def button_add():
 
     return
 
-now_text = ''
+now_text = '\N{Reverse Solidus}'
+cursor = ' \N{BLACK DOWN-POINTING TRIANGLE} '
+
 def button_1():
     global now_text
     width = lbl_2.winfo_width()
-    now_text = now_text + prediction_map[prediction[0]]
+    now_text = now_text[:-1] + prediction_map[prediction[0]]+'\N{Reverse Solidus}'
     #print((width-26)//25)
     if len(now_text)>(width-26)//25:   
         lbl_2["text"] = now_text[len(now_text)-(width-26)//25:]
@@ -50,7 +52,7 @@ def button_1():
 def button_2():
     global now_text
     width = lbl_2.winfo_width()
-    now_text = now_text + prediction_map[prediction[1]]
+    now_text = now_text[:-1] + prediction_map[prediction[1]]+'\N{Reverse Solidus}'
     if len(now_text)>(width-26)//25:   
         lbl_2["text"] = now_text[len(now_text)-(width-26)//25:]
     else:
@@ -59,7 +61,7 @@ def button_2():
 def button_3():
     global now_text
     width = lbl_2.winfo_width()
-    now_text = now_text + prediction_map[prediction[2]]
+    now_text = now_text[:-1] + prediction_map[prediction[2]]+'\N{Reverse Solidus}'
     if len(now_text)>(width-26)//25:   
         lbl_2["text"] = now_text[len(now_text)-(width-26)//25:]
     else:
@@ -68,7 +70,7 @@ def button_3():
 def button_4():
     global now_text
     width = lbl_2.winfo_width()
-    now_text = now_text + prediction_map[prediction[3]]
+    now_text = now_text[:-1] + prediction_map[prediction[3]]+'\N{Reverse Solidus}'
     if len(now_text)>(width-26)//25:   
         lbl_2["text"] = now_text[len(now_text)-(width-26)//25:]
     else:
@@ -81,6 +83,15 @@ def change_equation_bar(e):
         lbl_2["text"] = now_text[len(now_text)-(width-26)//25:]
     else:
         lbl_2["text"] = now_text
+
+
+def left():
+    global cursor
+    width = lbl_2.winfo_width()
+
+
+def right():
+
 prediction_map = {
     0:'0',
     1:'1',
@@ -111,9 +122,10 @@ draw = ImageDraw.Draw(image1)
 window = tk.Tk()
 window.title("Calculator")
 
-window.rowconfigure(0,weight = 1,minsize = 60)
-window.rowconfigure(1,weight = 1,minsize = 85)
-window.rowconfigure(2,weight = 1,minsize = 310)
+window.rowconfigure(0,weight = 0,minsize = 25)
+window.rowconfigure(1,weight = 1,minsize = 60)
+window.rowconfigure(2,weight = 1,minsize = 85)
+window.rowconfigure(3,weight = 1,minsize = 310)
 window.columnconfigure(0,weight = 1,minsize = 110)
 window.columnconfigure(1,weight = 1,minsize = 410)
 window.columnconfigure(2,weight = 1,minsize = 110)
@@ -140,20 +152,27 @@ frm_display_equation = tk.Frame(master = window, relief = tk.RIDGE, borderwidth 
 frm_display_equation.rowconfigure(0,weight = 1,minsize = 50)
 frm_display_equation.columnconfigure(0,weight = 1,minsize = 600)
 
-frm_right_btn.grid(row = 2, column = 2, sticky="nsew")
-frm_writing_board.grid(row = 2, column = 1, sticky="nsew")
-frm_display.grid(row = 1, columnspan = 3, sticky="nsew")
-frm_left_btn.grid(row = 2, column = 0, sticky="nsew")
-frm_display_equation.grid(row = 0, columnspan = 3, sticky="nsew")
+frm_cursor = tk.Frame(master = window, relief = tk.RIDGE, borderwidth = 5)
+frm_cursor.rowconfigure(0,weight = 1,minsize = 15)
+frm_cursor.columnconfigure(0,weight = 1,minsize = 600)
+
+frm_right_btn.grid(row = 3, column = 2, sticky="nsew")
+frm_writing_board.grid(row = 3, column = 1, sticky="nsew")
+frm_display.grid(row = 2, columnspan = 3, sticky="nsew")
+frm_left_btn.grid(row = 3, column = 0, sticky="nsew")
+frm_display_equation.grid(row = 1, columnspan = 3, sticky="nsew")
+frm_cursor.grid(row = 0, columnspan = 3, sticky="nsew")
 
 
 lbl_1 = tk.Label(master = frm_display, bg='white', relief = tk.RIDGE, borderwidth = 1)
 lbl_1.grid(row = 0, column = 0, sticky="nsew")
 
 
-lbl_2 = tk.Label(master = frm_display_equation, bg='white', relief = tk.RIDGE, borderwidth = 1,font = ("Courier",30),anchor = 'e',justify=tk.LEFT)
+lbl_2 = tk.Label(master = frm_display_equation, bg='white', relief = tk.RIDGE, borderwidth = 1,font = ("Courier",30),anchor = 'w',justify=tk.RIGHT)
 lbl_2.grid(row = 0, column = 0, sticky="nsew")
 
+lbl_3 = tk.Label(master = frm_cursor, bg='white', relief = tk.RIDGE, borderwidth = 1,font = ("Courier",10),anchor = 'w',justify=tk.RIGHT)
+lbl_3.grid(row = 0, column = 0, sticky="nsew")
 
 cv = tk.Canvas(master = frm_writing_board, bg='white', relief = tk.RIDGE, borderwidth = 1, width=400, height=300)
 cv.grid(row = 0, column = 0,sticky="nsew")
@@ -174,7 +193,7 @@ btn_4.grid(row = 3, column = 0,sticky="nsew")
 btn_5 = tk.Button(master = frm_left_btn, text = 'DEL', relief = tk.RIDGE, borderwidth = 1, command = button_add)
 btn_6 = tk.Button(master = frm_left_btn, text = 'AC' , relief = tk.RIDGE, borderwidth = 1 , command = button_add)
 btn_7 = tk.Button(master = frm_left_btn, text = "\N{RIGHTWARDS BLACK ARROW}", relief = tk.RIDGE, borderwidth = 1, command = button_add)
-btn_8 = tk.Button(master = frm_left_btn, text = "\N{LEFTWARDS BLACK ARROW}" , relief = tk.RIDGE, borderwidth = 1, command = button_add)
+btn_8 = tk.Button(master = frm_left_btn, text = "\N{LEFTWARDS BLACK ARROW}" , relief = tk.RIDGE, borderwidth = 1, command = left)
 btn_9 = tk.Button(master = frm_left_btn, text = '=', command = save, relief = tk.RIDGE, borderwidth = 1)
 
 
