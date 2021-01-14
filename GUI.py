@@ -127,12 +127,19 @@ class GUI():
     def DEL(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
         if self.cursor_position != 0:
-            self.cursor = self.cursor[3:]
-            self.cursor_position = self.cursor_position - 1
-            self.real_cursor_position = self.real_cursor_position - 1
-            self.lbl_3["text"] = self.cursor
-            self.real_text = self.real_text[0:self.real_cursor_position] + self.real_text[self.real_cursor_position+1:]
-            self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)]
+            if self.cursor_position == self.real_cursor_position:
+                self.cursor = self.cursor[3:]
+                self.cursor_position = self.cursor_position - 1
+                self.real_cursor_position = self.real_cursor_position - 1
+                self.lbl_3["text"] = self.cursor
+                self.real_text = self.real_text[0:self.real_cursor_position] + self.real_text[self.real_cursor_position+1:]
+                self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)]
+            else:
+                self.real_cursor_position = self.real_cursor_position - 1
+                self.lbl_3["text"] = self.cursor
+                self.real_text = self.real_text[0:self.real_cursor_position] + self.real_text[self.real_cursor_position+1:]
+                self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)]
+
             
     def AC(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
