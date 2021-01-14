@@ -27,7 +27,7 @@ class GUI():
                             }
         self.cursor_position = 0
         self.real_cursor_position = 0
-
+        self.ans = '12349876'  
     def save(self):
         self.image1.save('image.jpg')
         self.cv.delete("all")
@@ -38,7 +38,7 @@ class GUI():
         width = self.cv.winfo_width()
         height = self.cv.winfo_height()
         x_pillow,y_pillow = x*28/width,y*28/height
-
+        self.change_right_buttons()
         #canvas
         self.cv.create_oval(x-10,y+10,x+10,y-10,fill = "black")
 
@@ -111,11 +111,9 @@ class GUI():
             self.real_cursor_position = self.real_cursor_position - 1
             self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
             
-
-
     def right(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
-        if self.cursor_position != self.equation_space:
+        if self.cursor_position != self.equation_space and self.real_cursor_position != len(self.real_text):
             self.cursor_position = self.cursor_position + 1
             self.real_cursor_position = self.real_cursor_position + 1
             self.cursor = '   '+self.cursor
@@ -146,11 +144,22 @@ class GUI():
         self.real_cursor_position = 0
         self.cursor_position = 0
         self.real_text = ''
+        self.lbl_1['text'] =''
         self.cursor = ' \N{BLACK DOWN-POINTING TRIANGLE} ' 
         self.lbl_3["text"] = self.cursor
         self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
-    def main(self, pred):
-        self.prediction = pred
+
+    def change_right_buttons(self):
+        self.prediction = [0,1,2,14] 
+        self.probability = [0.8,0.1,0.05,0.05]
+        self.btn_1['text'] = str(self.prediction_map[self.prediction[0]]) + '\n' + str(self.probability[0]) + '\N{Percent Sign}'
+        self.btn_2['text'] = str(self.prediction_map[self.prediction[1]]) + '\n' + str(self.probability[1]) + '\N{Percent Sign}'
+        self.btn_3['text'] = str(self.prediction_map[self.prediction[2]]) + '\n' + str(self.probability[2]) + '\N{Percent Sign}'
+        self.btn_4['text'] = str(self.prediction_map[self.prediction[3]]) + '\n' + str(self.probability[3]) + '\N{Percent Sign}'
+
+    def show_answer(self,ans):
+        self.lbl_1['text'] = ans
+    def main(self):  
         
         self.window = tk.Tk()
         self.window.title("Calculator")
@@ -200,14 +209,14 @@ class GUI():
         self.frm_cursor.grid(row = 0, columnspan = 3, sticky="nsew")
 
 
-        self.lbl_1 = tk.Label(master = self.frm_display, bg='white', relief = tk.RIDGE, borderwidth = 1)
+        self.lbl_1 = tk.Label(master = self.frm_display, bg='#A9BAB6', relief = tk.RIDGE, borderwidth = 1,font = ("Courier",30),anchor = 'e',justify=tk.LEFT)
         self.lbl_1.grid(row = 0, column = 0, sticky="nsew")
 
 
-        self.lbl_2 = tk.Label(master = self.frm_display_equation, bg='white', relief = tk.RIDGE, borderwidth = 1,font = ("Courier",30),anchor = 'w',justify=tk.RIGHT)
+        self.lbl_2 = tk.Label(master = self.frm_display_equation, bg='#A9BAB6', relief = tk.RIDGE, borderwidth = 1,font = ("Courier",30),anchor = 'w',justify=tk.RIGHT)
         self.lbl_2.grid(row = 0, column = 0, sticky="nsew")
 
-        self.lbl_3 = tk.Label(master = self.frm_cursor, bg='white', relief = tk.RIDGE, borderwidth = 1,font = ("Courier",10),anchor = 'w',justify=tk.RIGHT,text = self.cursor )
+        self.lbl_3 = tk.Label(master = self.frm_cursor, bg='#114E6A', relief = tk.RIDGE, borderwidth = 1,font = ("Courier",10),anchor = 'w',justify=tk.RIGHT,text = self.cursor,fg = '#F8F5F5')
         self.lbl_3.grid(row = 0, column = 0, sticky="nsew")
 
         self.cv = tk.Canvas(master = self.frm_writing_board, bg='white', relief = tk.RIDGE, borderwidth = 1, width=400, height=300)
@@ -215,10 +224,10 @@ class GUI():
         self.cv.bind('<Button-1>', self.paint)
 
         #right buttons
-        self.btn_1 = tk.Button(master = self.frm_right_btn, text = '1' ,relief = tk.RIDGE, borderwidth = 1, command = self.button_1)
-        self.btn_2 = tk.Button(master = self.frm_right_btn, text = '2' ,relief = tk.RIDGE, borderwidth = 1, command = self.button_2)
-        self.btn_3 = tk.Button(master = self.frm_right_btn, text = '3' ,relief = tk.RIDGE, borderwidth = 1, command = self.button_3)
-        self.btn_4 = tk.Button(master = self.frm_right_btn, text = '4' ,relief = tk.RIDGE, borderwidth = 1, command = self.button_4)
+        self.btn_1 = tk.Button(master = self.frm_right_btn ,relief = tk.RIDGE, borderwidth = 1, font = ("Courier",15,'bold'),command = self.button_1,bg = '#2E2B2A' ,fg = '#F8F5F5')
+        self.btn_2 = tk.Button(master = self.frm_right_btn ,relief = tk.RIDGE, borderwidth = 1, font = ("Courier",15,'bold'),command = self.button_2,bg = '#2E2B2A' ,fg = '#F8F5F5')
+        self.btn_3 = tk.Button(master = self.frm_right_btn ,relief = tk.RIDGE, borderwidth = 1, font = ("Courier",15,'bold'),command = self.button_3,bg = '#2E2B2A' ,fg = '#F8F5F5')
+        self.btn_4 = tk.Button(master = self.frm_right_btn ,relief = tk.RIDGE, borderwidth = 1, font = ("Courier",15,'bold'),command = self.button_4,bg = '#2E2B2A' ,fg = '#F8F5F5')
         self.btn_1.grid(row = 0, column = 0,sticky="nsew")
         self.btn_2.grid(row = 1, column = 0,sticky="nsew")
         self.btn_3.grid(row = 2, column = 0,sticky="nsew")
@@ -226,11 +235,11 @@ class GUI():
 
 
         # left buttons
-        self.btn_5 = tk.Button(master = self.frm_left_btn, text = 'DEL', relief = tk.RIDGE, borderwidth = 1, command = self.DEL)
-        self.btn_6 = tk.Button(master = self.frm_left_btn, text = 'AC' , relief = tk.RIDGE, borderwidth = 1 , command = self.AC)
-        self.btn_7 = tk.Button(master = self.frm_left_btn, text = "\N{RIGHTWARDS BLACK ARROW}", relief = tk.RIDGE, borderwidth = 1, command = self.right)
-        self.btn_8 = tk.Button(master = self.frm_left_btn, text = "\N{LEFTWARDS BLACK ARROW}" , relief = tk.RIDGE, borderwidth = 1, command = self.left)
-        self.btn_9 = tk.Button(master = self.frm_left_btn, text = '=', command = self.save, relief = tk.RIDGE, borderwidth = 1)
+        self.btn_5 = tk.Button(master = self.frm_left_btn, text = 'DEL'                       , relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1, command = self.DEL)
+        self.btn_6 = tk.Button(master = self.frm_left_btn, text = 'AC'                        , relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1, command = self.AC)
+        self.btn_7 = tk.Button(master = self.frm_left_btn, text = "\N{RIGHTWARDS BLACK ARROW}", relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1, command = self.right)
+        self.btn_8 = tk.Button(master = self.frm_left_btn, text = "\N{LEFTWARDS BLACK ARROW}" , relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1, command = self.left)
+        self.btn_9 = tk.Button(master = self.frm_left_btn, text = 'CAL', command = lambda : self.show_answer(self.ans)  , relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1,bg = '#114E6A',fg = '#F8F5F5')
 
 
         self.btn_5.grid(row = 0, columnspan = 2,sticky="nsew")
@@ -245,8 +254,7 @@ class GUI():
         self.window.mainloop()
 
 gui = GUI()
-prediction = [0,1,2,14] 
-gui.main(prediction)
+gui.main()
 
 
 
