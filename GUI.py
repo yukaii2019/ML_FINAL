@@ -3,7 +3,8 @@ import numpy as np
 from inference import inference
 import PIL
 from PIL import Image, ImageDraw
-
+from calculator import * 
+import re
 
 class GUI():
     def __init__(self):
@@ -11,22 +12,67 @@ class GUI():
         self.real_text = ''
         self.cursor = ' \N{BLACK DOWN-POINTING TRIANGLE} '
         self.prediction_map = {
-                                0:'0',
-                                1:'1',
-                                2:'2',
-                                3:'3',
-                                4:'4',
-                                5:'5',
-                                6:'6',
-                                7:'7',
-                                8:'8',
-                                9:'9',
-                                10:'\N{PLUS SIGN}',
-                                11:'\N{HYPHEN-MINUS}',
-                                12:'\N{MULTIPLICATION SIGN}',
-                                13:'\N{DIVISION SIGN}',
-                                14:'\N{EQUALS SIGN}',
-                            }
+                            0:  '0',
+                            1:  '1',
+                            2:  '2',
+                            3:  '3',
+                            4:  '4',
+                            5:  '5',
+                            6:  '6',
+                            7:  '7',
+                            8:  '8',
+                            9:  '9',
+                            10: 'a',
+                            11: 'b',
+                            12: 'c',
+                            13: 'd',
+                            14: 'e',
+                            15: 'f',
+                            16: 'g',
+                            17: 'h',
+                            18: 'i',
+                            19: 'j',
+                            20: 'k',
+                            21: 'l',
+                            22: 'm',
+                            23: 'n',
+                            24: 'o',
+                            25: 'p',
+                            26: 'q',
+                            27: 'r',
+                            28: 's'
+                        }
+        self.visual_map = {
+                            '0':'0',
+                            '1':'1',
+                            '2':'2',
+                            '3':'3',
+                            '4':'4',
+                            '5':'5',
+                            '6':'6',
+                            '7':'7',
+                            '8':'8',
+                            '9':'9',
+                            'a':'\N{PLUS SIGN}',
+                            'b':'\N{HYPHEN-MINUS}',
+                            'c':'\N{MULTIPLICATION SIGN}',
+                            'd':'\N{DIVISION SIGN}',
+                            'e':'\N{EQUALS SIGN}',
+                            'f':'\N{Greek Small Letter Pi}',
+                            'g':'e',
+                            'h':'ln',  #ln
+                            'i':'log', #log
+                            'j':'cos',
+                            'k':'sin',
+                            'l':'tan',
+                            'm':'\N{Circumflex Accent}',  # ^
+                            'n':'\N{Square Root}',
+                            'o':'(',
+                            'p':')',
+                            'q':'%',
+                            'r':'!',
+                            's':'.'
+                        }
         self.cursor_position = 0
         self.real_cursor_position = 0
         self.ans = '12349876' 
@@ -37,6 +83,9 @@ class GUI():
         self.inf = inference()
         self.prediction = [0,0,0,0]
         self.probability = [0, 0 , 0, 0]
+
+    def visualize_real_text(self,string):
+        return ''.join(list(map(lambda x: self.visual_map[x],string)))
     def clean_board_and_button(self):
         self.cv.delete("all")
         self.draw.rectangle([(0,0),(28,28)], fill="white")
@@ -81,7 +130,7 @@ class GUI():
             self.lbl_3["text"] = self.cursor
         if self.real_cursor_position != len(self.real_text):
             self.real_cursor_position = self.real_cursor_position + 1
-        self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
         self.clean_board_and_button()
     def button_2(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
@@ -92,7 +141,7 @@ class GUI():
             self.lbl_3["text"] = self.cursor
         if self.real_cursor_position != len(self.real_text):
             self.real_cursor_position = self.real_cursor_position + 1
-        self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
         self.clean_board_and_button()
     def button_3(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
@@ -103,7 +152,7 @@ class GUI():
             self.lbl_3["text"] = self.cursor
         if self.real_cursor_position != len(self.real_text):
             self.real_cursor_position = self.real_cursor_position + 1
-        self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
         self.clean_board_and_button()
     def button_4(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
@@ -114,11 +163,11 @@ class GUI():
             self.lbl_3["text"] = self.cursor
         if self.real_cursor_position != len(self.real_text):
             self.real_cursor_position = self.real_cursor_position + 1
-        self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
         self.clean_board_and_button()
     def change_equation_bar(self,e):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
-        self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
     
     def left(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
@@ -129,7 +178,7 @@ class GUI():
             self.lbl_3["text"] = self.cursor
         elif self.real_cursor_position  != 0:      
             self.real_cursor_position = self.real_cursor_position - 1
-            self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+            self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
       
     def right(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
@@ -140,7 +189,7 @@ class GUI():
             self.lbl_3["text"] = self.cursor
         elif self.real_cursor_position != len(self.real_text):
             self.real_cursor_position = self.real_cursor_position + 1
-            self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+            self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
         
     def DEL(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
@@ -151,12 +200,12 @@ class GUI():
                 self.real_cursor_position = self.real_cursor_position - 1
                 self.lbl_3["text"] = self.cursor
                 self.real_text = self.real_text[0:self.real_cursor_position] + self.real_text[self.real_cursor_position+1:]
-                self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)]
+                self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)])
             else:
                 self.real_cursor_position = self.real_cursor_position - 1
                 self.lbl_3["text"] = self.cursor
                 self.real_text = self.real_text[0:self.real_cursor_position] + self.real_text[self.real_cursor_position+1:]
-                self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)]
+                self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)])
 
             
     def AC(self):
@@ -167,18 +216,54 @@ class GUI():
         self.lbl_1['text'] =''
         self.cursor = ' \N{BLACK DOWN-POINTING TRIANGLE} ' 
         self.lbl_3["text"] = self.cursor
-        self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
         self.clean_board_and_button()
 
     def change_right_buttons(self):
-        self.btn_1['text'] = str(self.prediction_map[self.prediction[0]]) + '\n' + str(self.probability[0]) + '\N{Percent Sign}'
-        self.btn_2['text'] = str(self.prediction_map[self.prediction[1]]) + '\n' + str(self.probability[1]) + '\N{Percent Sign}'
-        self.btn_3['text'] = str(self.prediction_map[self.prediction[2]]) + '\n' + str(self.probability[2]) + '\N{Percent Sign}'
-        self.btn_4['text'] = str(self.prediction_map[self.prediction[3]]) + '\n' + str(self.probability[3]) + '\N{Percent Sign}'
-
-    def show_answer(self,ans):
+        if self.probability[0] > 52:
+            self.btn_1['text'] = str(self.visual_map[self.prediction_map[self.prediction[0]]]) + '\n' + str(self.probability[0]) + 'pt'
+        else:
+            self.btn_1['text'] = ''
+        if self.probability[1] > 52:
+            self.btn_2['text'] = str(self.visual_map[self.prediction_map[self.prediction[1]]]) + '\n' + str(self.probability[1]) + 'pt'
+        else:
+            self.btn_2['text'] = ''
+        if self.probability[2] > 52:
+            self.btn_3['text'] = str(self.visual_map[self.prediction_map[self.prediction[2]]]) + '\n' + str(self.probability[2]) + 'pt'
+        else:
+            self.btn_3['text'] = ''
+        if self.probability[3] > 52:
+            self.btn_4['text'] = str(self.visual_map[self.prediction_map[self.prediction[3]]]) + '\n' + str(self.probability[3]) + 'pt'
+        else:
+            self.btn_4['text'] = ''
+    def transformer(self,lst):
+        lst = "".join(['.' if lst[x]=='s'else \
+                    ('-'if lst[x]=='b' and x!=len(lst) and lst[x+1].isdigit() else \
+                        lst[x]) for x in range(len(lst))])
+                        #lst = '1a3co-9.8pbjo40p'  #1+3*(-9.8)-cos(40)
+        numbers = [float(x) for x in re.findall('[+-]?\d+(?:\.\d+)?',lst)]
+        equation = re.sub('[+-]?\d+(?:\.\d+)?','A',lst)
+        inv_map = {v: k for k, v in self.prediction_map.items()}
+        equation_list = [ x if x == 'A' else str(inv_map[x]) for x in equation]
+        insert_multiplier_pos = []
+        k = 1
+        for i in range(len(equation_list)-1):
+            if equation_list[i] == 'A' and (equation_list[i+1] == '15' or equation_list[i+1] == '16' or equation_list[i+1] == '17' or equation_list[i+1] == '18' or \
+                                            equation_list[i+1] == '19' or equation_list[i+1] == '20' or equation_list[i+1] == '21' or equation_list[i+1] == '23' or\
+                                            equation_list[i+1] == '24'):
+                insert_multiplier_pos.append(i+k)
+                k+=1
+        for i in insert_multiplier_pos:
+            equation_list.insert(i,'12')
+        print(equation_list)
+        return equation_list, numbers
+        
+    def show_answer(self):
+        equation_list, numbers = self.transformer(self.real_text)
+        print(equation_list)
+        print(numbers)
+        ans = cal(equation_list,numbers)
         self.lbl_1['text'] = ans
-
     def main(self):  
         
         self.window = tk.Tk()
@@ -256,7 +341,7 @@ class GUI():
         self.btn_6 = tk.Button(master = self.frm_left_btn, text = 'AC'                        , relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1, command = self.AC)
         self.btn_7 = tk.Button(master = self.frm_left_btn, text = "\N{RIGHTWARDS BLACK ARROW}", relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1, command = self.right)
         self.btn_8 = tk.Button(master = self.frm_left_btn, text = "\N{LEFTWARDS BLACK ARROW}" , relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1, command = self.left)
-        self.btn_9 = tk.Button(master = self.frm_left_btn, text = 'CAL', command = lambda : self.show_answer(self.ans)  , relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1,bg = '#114E6A',fg = '#F8F5F5')
+        self.btn_9 = tk.Button(master = self.frm_left_btn, text = 'CAL',bg = '#114E6A',fg = '#F8F5F5', relief = tk.RIDGE,font = ("Courier",15,'bold'),borderwidth = 1, command = self.show_answer)
 
 
         self.btn_5.grid(row = 0, columnspan = 2,sticky="nsew")
