@@ -1,4 +1,6 @@
 import tkinter as tk
+import numpy as np
+from inference import inference
 import PIL
 from PIL import Image, ImageDraw
 
@@ -27,23 +29,39 @@ class GUI():
                             }
         self.cursor_position = 0
         self.real_cursor_position = 0
-        self.ans = '12349876'  
-    def save(self):
-        self.image1.save('image.jpg')
+        self.ans = '12349876' 
+
+        self.image1 = PIL.Image.new('RGB', (28, 28), 'white')
+        self.draw = ImageDraw.Draw(self.image1) 
+
+        self.inf = inference()
+        self.prediction = [0,0,0,0]
+        self.probability = [0, 0 , 0, 0]
+    def clean_board_and_button(self):
         self.cv.delete("all")
         self.draw.rectangle([(0,0),(28,28)], fill="white")
+        self.btn_1['text'] = ''
+        self.btn_2['text'] = ''
+        self.btn_3['text'] = ''
+        self.btn_4['text'] = ''
 
     def paint(self,e):
         x, y = e.x, e.y
         width = self.cv.winfo_width()
         height = self.cv.winfo_height()
         x_pillow,y_pillow = x*28/width,y*28/height
-        self.change_right_buttons()
+        
         #canvas
-        self.cv.create_oval(x-10,y+10,x+10,y-10,fill = "black")
-
+        self.cv.create_oval(x-12,y+12,x+12,y-12,fill = "black")
+        #self.cv.create_rectangle(x-12,y+12,x+12,y-12,fill = "black")
         #pil
         self.draw.ellipse([(x_pillow-1,y_pillow-1),(x_pillow+1,y_pillow+1)], fill="black")
+
+        #inference 
+        img_grey = self.image1.convert('L')
+        array = np.array(img_grey).reshape(-1,28,28,1)
+        self.prediction, self.probability = self.inf.label_prob(array)
+        self.change_right_buttons()
         self.cv.bind('<B1-Motion>', self.paint)
 
     def button_add(self):
@@ -64,7 +82,7 @@ class GUI():
         if self.real_cursor_position != len(self.real_text):
             self.real_cursor_position = self.real_cursor_position + 1
         self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
-
+        self.clean_board_and_button()
     def button_2(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
         self.real_text = self.real_text[:self.real_cursor_position]+self.prediction_map[self.prediction[1]]+self.real_text[self.real_cursor_position:]
@@ -75,7 +93,7 @@ class GUI():
         if self.real_cursor_position != len(self.real_text):
             self.real_cursor_position = self.real_cursor_position + 1
         self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
-
+        self.clean_board_and_button()
     def button_3(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
         self.real_text = self.real_text[:self.real_cursor_position]+self.prediction_map[self.prediction[2]]+self.real_text[self.real_cursor_position:]
@@ -86,7 +104,7 @@ class GUI():
         if self.real_cursor_position != len(self.real_text):
             self.real_cursor_position = self.real_cursor_position + 1
         self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
-
+        self.clean_board_and_button()
     def button_4(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
         self.real_text = self.real_text[:self.real_cursor_position]+self.prediction_map[self.prediction[3]]+self.real_text[self.real_cursor_position:]
@@ -97,9 +115,11 @@ class GUI():
         if self.real_cursor_position != len(self.real_text):
             self.real_cursor_position = self.real_cursor_position + 1
         self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+        self.clean_board_and_button()
     def change_equation_bar(self,e):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
         self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+    
     def left(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
         if self.cursor_position != 0:
@@ -110,7 +130,7 @@ class GUI():
         elif self.real_cursor_position  != 0:      
             self.real_cursor_position = self.real_cursor_position - 1
             self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
-            
+      
     def right(self):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
         if self.cursor_position != self.equation_space and self.real_cursor_position != len(self.real_text):
@@ -148,10 +168,9 @@ class GUI():
         self.cursor = ' \N{BLACK DOWN-POINTING TRIANGLE} ' 
         self.lbl_3["text"] = self.cursor
         self.lbl_2["text"] = self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
+        self.clean_board_and_button()
 
     def change_right_buttons(self):
-        self.prediction = [0,1,2,14] 
-        self.probability = [0.8,0.1,0.05,0.05]
         self.btn_1['text'] = str(self.prediction_map[self.prediction[0]]) + '\n' + str(self.probability[0]) + '\N{Percent Sign}'
         self.btn_2['text'] = str(self.prediction_map[self.prediction[1]]) + '\n' + str(self.probability[1]) + '\N{Percent Sign}'
         self.btn_3['text'] = str(self.prediction_map[self.prediction[2]]) + '\n' + str(self.probability[2]) + '\N{Percent Sign}'
@@ -159,13 +178,11 @@ class GUI():
 
     def show_answer(self,ans):
         self.lbl_1['text'] = ans
+
     def main(self):  
         
         self.window = tk.Tk()
         self.window.title("Calculator")
-
-        self.image1 = PIL.Image.new('RGB', (28, 28), 'white')
-        self.draw = ImageDraw.Draw(self.image1)
 
         self.window.rowconfigure(0,weight = 0,minsize = 25)
         self.window.rowconfigure(1,weight = 1,minsize = 60)
