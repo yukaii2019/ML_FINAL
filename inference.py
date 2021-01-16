@@ -3,7 +3,7 @@ import numpy as np
 
 class inference:
     def __init__(self):
-        self.model_name = "cnn3layers_full.h5"
+        self.model_name = ".\\model\\cnn3layers_withBN.h5"
         self.model = tf.keras.models.load_model(self.model_name)
 
     def label_prob(self,ds):

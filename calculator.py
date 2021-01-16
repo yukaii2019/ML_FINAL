@@ -101,10 +101,10 @@ def calculator(s,reference):
     C=Stacks()
     j=0
     for ss in s:
-        print("now:",ss)
-        print(C.printStack())
+        #print("now:",ss)
+        #print(C.printStack())
         if isoperator(ss):
-            print(C.sizes())
+            #print(C.sizes())
             if(C.sizes()>=2):
                 if ss=='10':
                     a=float(C.pop())
@@ -218,7 +218,7 @@ def cal(inf,reference_list):
     #reference_list=[38]
 
     postfix=infix_to_postfix(st,priority,inf)
-    print(postfix)
+    #print(postfix)
 
 
     return calculator(postfix,reference_list)

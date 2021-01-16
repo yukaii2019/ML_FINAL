@@ -127,7 +127,6 @@ class GUI():
         return
 
     def button_1(self):
-        #self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
         enter = self.prediction_map[self.prediction[0]]
 
         self.now_eq_length = self.now_eq_length + 2 if enter == 'h' else (self.now_eq_length + 3 if enter == 'i' or enter == 'j' or enter == 'k' or enter == 'l' else self.now_eq_length + 1) 
@@ -149,21 +148,7 @@ class GUI():
         self.lbl_2["text"] = self.visual_text
 
         self.clean_board_and_button()
-        #self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1]
 
-
-        #self.real_text = self.real_text[:self.real_cursor_position]+ enter + self.real_text[self.real_cursor_position:]  #insert 
-        #self.visual_text = self.visualize_real_text(self.real_text)[-self.equation_space:]
-        '''
-        if self.cursor_position != self.equation_space:
-            self.cursor_position = self.cursor_position + 1
-            self.cursor = '   '+self.cursor
-            self.lbl_3["text"] = self.cursor
-        if self.real_cursor_position != len(self.real_text):
-            self.real_cursor_position = self.real_cursor_position + 1
-        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
-        self.clean_board_and_button()
-        '''
     def button_2(self):
         enter = self.prediction_map[self.prediction[1]]
 
@@ -186,18 +171,7 @@ class GUI():
         self.lbl_2["text"] = self.visual_text
 
         self.clean_board_and_button()
-        '''
-        #self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
-        self.real_text = self.real_text[:self.real_cursor_position]+self.prediction_map[self.prediction[1]]+self.real_text[self.real_cursor_position:]
-        if self.cursor_position != self.equation_space:
-            self.cursor_position = self.cursor_position + 1
-            self.cursor = '   '+self.cursor
-            self.lbl_3["text"] = self.cursor
-        if self.real_cursor_position != len(self.real_text):
-            self.real_cursor_position = self.real_cursor_position + 1
-        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
-        self.clean_board_and_button()
-        '''
+
     def button_3(self):
         enter = self.prediction_map[self.prediction[2]]
 
@@ -220,18 +194,7 @@ class GUI():
         self.lbl_2["text"] = self.visual_text
 
         self.clean_board_and_button()
-        '''
-        #self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
-        self.real_text = self.real_text[:self.real_cursor_position]+self.prediction_map[self.prediction[2]]+self.real_text[self.real_cursor_position:]
-        if self.cursor_position != self.equation_space:
-            self.cursor_position = self.cursor_position + 1
-            self.cursor = '   '+self.cursor
-            self.lbl_3["text"] = self.cursor
-        if self.real_cursor_position != len(self.real_text):
-            self.real_cursor_position = self.real_cursor_position + 1
-        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
-        self.clean_board_and_button()
-        '''
+
     def button_4(self):
         enter = self.prediction_map[self.prediction[3]]
         '''  '''
@@ -255,25 +218,14 @@ class GUI():
         self.lbl_2["text"] = self.visual_text
 
         self.clean_board_and_button()
-        '''
-        #self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
-        self.real_text = self.real_text[:self.real_cursor_position]+self.prediction_map[self.prediction[3]]+self.real_text[self.real_cursor_position:]
-        if self.cursor_position != self.equation_space:
-            self.cursor_position = self.cursor_position + 1
-            self.cursor = '   '+self.cursor
-            self.lbl_3["text"] = self.cursor
-        if self.real_cursor_position != len(self.real_text):
-            self.real_cursor_position = self.real_cursor_position + 1
-        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
-        self.clean_board_and_button()
-        '''
+
     def change_equation_bar(self,e):
         self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
-        self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
+        self.lbl_2["text"] = self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.visual_cursor_position + (self.equation_space-self.cursor_position) + 1]
     
     def left(self):
         if self.real_cursor_position > 0:
-            #self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
+
             the_word_before = self.real_text[self.real_cursor_position-1]
             cursor_shift = 2 if the_word_before == 'h' else (3 if the_word_before == 'i' or the_word_before == 'j' or the_word_before == 'k' or the_word_before == 'l' else 1)
             self.cursor_position = self.cursor_position-cursor_shift
@@ -287,29 +239,12 @@ class GUI():
                 self.real_cursor_position = 0 
 
             self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.visual_cursor_position + (self.equation_space-self.cursor_position) + 1]
-            '''
-            if self.now_eq_length - self.visual_cursor_position <=  self.equation_space-self.cursor_position:
-                self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position: self.now_eq_length]
-            else:
-                self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.visual_cursor_position + (self.equation_space-self.cursor_position) + 1]
-            '''
-            
-            #self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.now_eq_length]
+
             self.cursor_text = '   '*(self.cursor_position) +self.cursor
 
             self.lbl_3["text"] = self.cursor_text
             self.lbl_2["text"] = self.visual_text
 
-        '''
-        if self.cursor_position != 0:
-            self.cursor_position = self.cursor_position - 1
-            self.real_cursor_position = self.real_cursor_position - 1
-            self.cursor = self.cursor[3:]
-            self.lbl_3["text"] = self.cursor
-        elif self.real_cursor_position  != 0:      
-            self.real_cursor_position = self.real_cursor_position - 1
-            self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
-        '''
     def right(self):
         if self.real_cursor_position < len(self.real_text):
             the_word_after = self.real_text[self.real_cursor_position]
@@ -319,37 +254,17 @@ class GUI():
             self.real_cursor_position = self.real_cursor_position + 1 
             if self.cursor_position >= self.equation_space:
                 self.cursor_position = self.equation_space - 1
-            '''
-            if self.real_cursor_position > len(self.real_text):
-                self.real_cursor_position = len(self.real_text)
-            '''
 
         self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.visual_cursor_position + (self.equation_space-self.cursor_position) + 1]
-        '''
-            if self.now_eq_length - self.visual_cursor_position <=  self.equation_space-self.cursor_position:
-                self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position: self.now_eq_length]
-            else:
-                self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.visual_cursor_position + (self.equation_space-self.cursor_position) + 1]
-        '''
-        #self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.now_eq_length]
+    
         self.cursor_text = '   '*(self.cursor_position) +self.cursor
 
         self.lbl_3["text"] = self.cursor_text
         self.lbl_2["text"] = self.visual_text
-        '''
-        self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
-        if self.cursor_position != self.equation_space and self.real_cursor_position != len(self.real_text):
-            self.cursor_position = self.cursor_position + 1
-            self.real_cursor_position = self.real_cursor_position + 1
-            self.cursor = '   '+self.cursor
-            self.lbl_3["text"] = self.cursor
-        elif self.real_cursor_position != len(self.real_text):
-            self.real_cursor_position = self.real_cursor_position + 1
-            self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)+1])
-        '''
+
     def DEL(self): 
         if self.real_cursor_position > 0:
-            #self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
+
             the_word_before = self.real_text[self.real_cursor_position-1]
             cursor_shift = 2 if the_word_before == 'h' else (3 if the_word_before == 'i' or the_word_before == 'j' or the_word_before == 'k' or the_word_before == 'l' else 1)
             self.cursor_position = self.cursor_position-cursor_shift
@@ -364,37 +279,14 @@ class GUI():
 
             self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position:self.visual_cursor_position] + self.visualize_real_text(self.real_text)[self.visual_cursor_position+cursor_shift:self.visual_cursor_position + (self.equation_space-self.cursor_position) + 1]
             self.real_text = self.real_text[:self.real_cursor_position] + self.real_text[self.real_cursor_position+1:] 
-            '''
-            if self.now_eq_length - self.visual_cursor_position <=  self.equation_space-self.cursor_position :
-                self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.now_eq_length-cursor_shift_b]
-            else:
-                self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.visual_cursor_position + (self.equation_space-self.cursor_position)+1-cursor_shift_b]
-             '''
-            #self.visual_text = self.visualize_real_text(self.real_text)[self.visual_cursor_position - self.cursor_position : self.visual_cursor_position + (self.equation_space-self.cursor_position-cursor_shift_b )+1]
-
 
             self.cursor_text = '   '*(self.cursor_position) +self.cursor
             self.lbl_3["text"] = self.cursor_text
             self.lbl_2["text"] = self.visual_text
         
-        '''
-        if self.cursor_position != 0:
-            if self.cursor_position == self.real_cursor_position:
-                self.cursor = self.cursor[3:]
-                self.cursor_position = self.cursor_position - 1
-                self.real_cursor_position = self.real_cursor_position - 1
-                self.lbl_3["text"] = self.cursor
-                self.real_text = self.real_text[0:self.real_cursor_position] + self.real_text[self.real_cursor_position+1:]
-                self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)])
-            else:
-                self.real_cursor_position = self.real_cursor_position - 1
-                self.lbl_3["text"] = self.cursor
-                self.real_text = self.real_text[0:self.real_cursor_position] + self.real_text[self.real_cursor_position+1:]
-                self.lbl_2["text"] = self.visualize_real_text(self.real_text[self.real_cursor_position-self.cursor_position:self.real_cursor_position+(self.equation_space-self.cursor_position)])
-        '''
             
     def AC(self):
-        #self.equation_space =  (self.frm_display_equation.winfo_width()-26)//25
+
         self.real_cursor_position = 0
         self.cursor_position = 0
         self.visual_cursor_position = 0
